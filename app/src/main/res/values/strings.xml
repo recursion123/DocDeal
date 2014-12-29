@@ -1,0 +1,8 @@
+<resources>
+
+    <string name="app_name">公文办理</string>
+    <string name="menu1">公文办理</string>
+    <string name="menu2">公文查询</string>
+    <string name="menu3">通讯录</string>
+    <string name="menu4">日程管理</string>
+</resources>
