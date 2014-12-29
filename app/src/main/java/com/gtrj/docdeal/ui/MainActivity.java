@@ -50,9 +50,7 @@ public class MainActivity extends Activity{
 
         	@Override
         	public void onClick(View arg0) {
-        		Intent intent = new Intent(MainActivity.this,SwitchActivity.class);
-        		intent.putExtra("BACKGROUND", backgroundColor);
-        		startActivity(intent);
+
         	}
         });
         layoutRipple = (LayoutRipple) findViewById(R.id.itemProgress);
@@ -64,9 +62,7 @@ public class MainActivity extends Activity{
 
         	@Override
         	public void onClick(View arg0) {
-        		Intent intent = new Intent(MainActivity.this,ProgressActivity.class);
-        		intent.putExtra("BACKGROUND", backgroundColor);
-        		startActivity(intent);
+
         	}
         });
         layoutRipple = (LayoutRipple) findViewById(R.id.itemWidgets);
@@ -78,9 +74,7 @@ public class MainActivity extends Activity{
 
         	@Override
         	public void onClick(View arg0) {
-        		Intent intent = new Intent(MainActivity.this,WidgetActivity.class);
-        		intent.putExtra("BACKGROUND", backgroundColor);
-        		startActivity(intent);
+
         	}
         });
     }
