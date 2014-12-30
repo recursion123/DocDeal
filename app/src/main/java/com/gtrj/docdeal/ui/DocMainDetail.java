@@ -13,6 +13,12 @@ import com.gc.materialdesigndemo.R;
 import com.gtrj.docdeal.net.WebService;
 import com.gtrj.docdeal.util.ContextString;
 
+import org.dom4j.Attribute;
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
+import org.dom4j.Node;
 import org.ksoap2.serialization.SoapObject;
 
 import java.util.HashMap;
@@ -48,7 +54,11 @@ public class DocMainDetail extends Activity {
                     Thread t = new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            Log.e("result",getDetailData());
+                           Map mmm=parserXml(getDetailData())[1];
+                            for(Object e:mmm.keySet()){
+                                Log.e("result", ((String[])e)[0]+"   "+((String[])e)[1]);
+                            }
+
                         }
                     });
                     t.start();
@@ -83,5 +93,38 @@ public class DocMainDetail extends Activity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private Map[] parserXml(String xml) {
+        Map[] maps = new Map[2];
+        maps[0] = new HashMap<String, String>();
+        maps[1] = new HashMap<String[], String>();
+        try {
+            Document document = DocumentHelper.parseText(xml);
+            Element root = document.getRootElement();
+            Element doc = root.element("公文");
+            Element basicData = doc.element("基本信息");
+            Element formData = doc.element("表单");
+            for (int i = 0; i < basicData.nodeCount(); i++) {
+                Node data = basicData.getXPathResult(i);
+                if (data != null && data.getName() != null && !data.getName().equals("null") && !data.getName().equals("公文标识")) {
+                    maps[0].put(data.getName(), data.getText());
+                }
+            }
+            for (int i = 0; i < formData.nodeCount(); i++) {
+                Node data = formData.getXPathResult(i);
+                if (data != null && data.getName() != null && !data.getName().equals("null") && !data.getName().equals("公文标识")) {
+                    Attribute at = formData.element(data.getName()).attribute("canwrite");
+                    if (at != null && at.getValue().equals("true")) {
+                        maps[1].put(new String[]{data.getName(), "true"}, data.getText());
+                    } else {
+                        maps[1].put(new String[]{data.getName(), "false"}, data.getText());
+                    }
+                }
+            }
+        } catch (DocumentException e) {
+            System.out.println(e.getMessage());
+        }
+        return maps;
     }
 }

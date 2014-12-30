@@ -7,23 +7,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.beardedhen.androidbootstrap.FontAwesomeText;
 import com.gc.materialdesigndemo.R;
 import com.gtrj.docdeal.bean.DocInfo;
 import com.gtrj.docdeal.util.StringUtil;
-
-import org.w3c.dom.Text;
 
 import java.util.List;
 
 /**
  * Created by zhang77555 on 2014/12/24.
  */
-public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactViewHolder> {
+public class DocMainListAdapter extends RecyclerView.Adapter<DocMainListAdapter.ContactViewHolder> {
 
     public List<DocInfo> contactList;
 
-    public ContactAdapter(List<DocInfo> contactList) {
+    public DocMainListAdapter(List<DocInfo> contactList) {
         this.contactList = contactList;
     }
 

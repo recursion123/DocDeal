@@ -17,7 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.gc.materialdesigndemo.R;
-import com.gtrj.docdeal.adapter.ContactAdapter;
+import com.gtrj.docdeal.adapter.DocMainListAdapter;
 import com.gtrj.docdeal.bean.DocInfo;
 import com.gtrj.docdeal.net.WebService;
 import com.gtrj.docdeal.util.ContextString;
@@ -41,7 +41,7 @@ public class DocMainList extends Activity implements
         SwipeRefreshLayout.OnRefreshListener{
     private RecyclerView recList;
     private SoapObject obj;
-    private ContactAdapter cAdapter;
+    private DocMainListAdapter cAdapter;
     private SwipeRefreshLayout swipeLayout;
     private boolean isRefresh = false;
     private int page=1;
@@ -66,7 +66,7 @@ public class DocMainList extends Activity implements
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recList.setLayoutManager(llm);
         final List<DocInfo> list = new ArrayList<>();
-        cAdapter = new ContactAdapter(list);
+        cAdapter = new DocMainListAdapter(list);
         recList.setAdapter(cAdapter);
         recList.addOnItemTouchListener(
                 new RecyclerItemClickListener(context, new RecyclerItemClickListener.OnItemClickListener() {
