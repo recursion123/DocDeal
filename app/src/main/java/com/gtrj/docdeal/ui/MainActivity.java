@@ -27,7 +27,7 @@ public class MainActivity extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        LayoutRipple layoutRipple = (LayoutRipple) findViewById(R.id.itemButtons);
+        LayoutRipple layoutRipple = (LayoutRipple) findViewById(R.id.docdeal);
 
 
         setOriginRiple(layoutRipple);
@@ -41,7 +41,7 @@ public class MainActivity extends Activity{
 				startActivity(intent);
 			}
 		});
-        layoutRipple = (LayoutRipple) findViewById(R.id.itemSwitches);
+        layoutRipple = (LayoutRipple) findViewById(R.id.contact);
 
 
         setOriginRiple(layoutRipple);
@@ -53,7 +53,7 @@ public class MainActivity extends Activity{
 
         	}
         });
-        layoutRipple = (LayoutRipple) findViewById(R.id.itemProgress);
+        layoutRipple = (LayoutRipple) findViewById(R.id.dateManage);
 
 
         setOriginRiple(layoutRipple);
@@ -65,7 +65,7 @@ public class MainActivity extends Activity{
 
         	}
         });
-        layoutRipple = (LayoutRipple) findViewById(R.id.itemWidgets);
+        layoutRipple = (LayoutRipple) findViewById(R.id.systemSetting);
 
 
         setOriginRiple(layoutRipple);

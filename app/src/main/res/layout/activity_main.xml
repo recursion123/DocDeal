@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:materialdesign="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -34,14 +33,6 @@
             android:layout_marginTop="128dp"
             android:background="#88CECECE" />
 
-        <!-- <com.gc.materialdesign.views.ButtonFloatSmall
-            android:id="@+id/buttonColorSelector"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="32dp"
-            android:layout_marginTop="108dp"
-            android:background="#1E88E5"
-            materialdesign:iconDrawable="@drawable/icn_select_color" /> -->
     </RelativeLayout>
 
     <RelativeLayout
@@ -63,7 +54,7 @@
     </RelativeLayout>
 
     <com.gc.materialdesign.views.LayoutRipple
-        android:id="@+id/itemButtons"
+        android:id="@+id/docdeal"
         android:layout_width="fill_parent"
         android:layout_height="64dp"
         android:background="#FFF"
@@ -86,29 +77,7 @@
     </com.gc.materialdesign.views.LayoutRipple>
 
     <com.gc.materialdesign.views.LayoutRipple
-        android:id="@+id/itemSwitches"
-        android:layout_width="fill_parent"
-        android:layout_height="64dp"
-        android:background="#FFF"
-        android:clickable="true" >
-
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="32dp"
-            android:src="@drawable/ic_find_in_page_black_48dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="104dp"
-            android:text="公文查询" />
-    </com.gc.materialdesign.views.LayoutRipple>
-
-    <com.gc.materialdesign.views.LayoutRipple
-        android:id="@+id/itemProgress"
+        android:id="@+id/contact"
         android:layout_width="fill_parent"
         android:layout_height="64dp"
         android:background="#FFF"
@@ -130,7 +99,7 @@
     </com.gc.materialdesign.views.LayoutRipple>
 
     <com.gc.materialdesign.views.LayoutRipple
-        android:id="@+id/itemWidgets"
+        android:id="@+id/dateManage"
         android:layout_width="fill_parent"
         android:layout_height="64dp"
         android:background="#FFF"
@@ -149,6 +118,28 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="104dp"
             android:text="日程管理" />
+    </com.gc.materialdesign.views.LayoutRipple>
+
+    <com.gc.materialdesign.views.LayoutRipple
+        android:id="@+id/systemSetting"
+        android:layout_width="fill_parent"
+        android:layout_height="64dp"
+        android:background="#FFF"
+        android:clickable="true" >
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="32dp"
+            android:src="@drawable/ic_storage_black_48dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="104dp"
+            android:text="系统设置" />
     </com.gc.materialdesign.views.LayoutRipple>
 
 </LinearLayout>

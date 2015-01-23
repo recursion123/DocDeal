@@ -6,10 +6,15 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.NavUtils;
-import android.util.Log;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
 import android.view.MenuItem;
 
+
+
 import com.gc.materialdesigndemo.R;
+import com.gtrj.docdeal.adapter.DocDetailAdapter;
 import com.gtrj.docdeal.net.WebService;
 import com.gtrj.docdeal.util.ContextString;
 
@@ -22,6 +27,7 @@ import org.dom4j.Node;
 import org.ksoap2.serialization.SoapObject;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -30,7 +36,8 @@ import java.util.Map;
 public class DocMainDetail extends Activity {
     private SoapObject obj;
     private String docId;
-
+    private RecyclerView recList;
+    private DocDetailAdapter cAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +48,15 @@ public class DocMainDetail extends Activity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
         actionBar.setTitle("公文详细");
+
+        recList = (RecyclerView) findViewById(R.id.cardDetail);
+        recList.setHasFixedSize(true);
+        LinearLayoutManager llm = new LinearLayoutManager(this);
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        recList.setLayoutManager(llm);
+        final   Map[] detailData = new Map[2];
+        cAdapter = new DocDetailAdapter(detailData);
+        recList.setAdapter(cAdapter);
 
         Message msg = msgHandler.obtainMessage();
         msg.arg1 = 1;
@@ -54,14 +70,16 @@ public class DocMainDetail extends Activity {
                     Thread t = new Thread(new Runnable() {
                         @Override
                         public void run() {
-                           Map mmm=parserXml(getDetailData())[1];
-                            for(Object e:mmm.keySet()){
-                                Log.e("result", ((String[])e)[0]+"   "+((String[])e)[1]);
-                            }
-
+                            cAdapter.detailData = parserXml(getDetailData());
+                            Message msg = msgHandler.obtainMessage();
+                            msg.arg1 = 2;
+                            msgHandler.sendMessage(msg);
                         }
                     });
                     t.start();
+                    break;
+                case 2:
+                    cAdapter.notifyDataSetChanged();
                     break;
                 default:
                     break;
@@ -98,7 +116,7 @@ public class DocMainDetail extends Activity {
     private Map[] parserXml(String xml) {
         Map[] maps = new Map[2];
         maps[0] = new HashMap<String, String>();
-        maps[1] = new HashMap<String[], String>();
+        maps[1] = new HashMap<String, String[]>();
         try {
             Document document = DocumentHelper.parseText(xml);
             Element root = document.getRootElement();
@@ -116,9 +134,9 @@ public class DocMainDetail extends Activity {
                 if (data != null && data.getName() != null && !data.getName().equals("null") && !data.getName().equals("公文标识")) {
                     Attribute at = formData.element(data.getName()).attribute("canwrite");
                     if (at != null && at.getValue().equals("true")) {
-                        maps[1].put(new String[]{data.getName(), "true"}, data.getText());
+                        maps[1].put(data.getName(), new String[]{data.getText(), "true"});
                     } else {
-                        maps[1].put(new String[]{data.getName(), "false"}, data.getText());
+                        maps[1].put(data.getName(), new String[]{data.getText(), "false"});
                     }
                 }
             }
@@ -126,5 +144,12 @@ public class DocMainDetail extends Activity {
             System.out.println(e.getMessage());
         }
         return maps;
+    }
+
+    //生成对应的菜单,并添加到Menu中
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.docdetail, menu);
+        return true;
     }
 }

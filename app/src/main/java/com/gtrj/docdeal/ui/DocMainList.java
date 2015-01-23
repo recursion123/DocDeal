@@ -13,8 +13,10 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.gc.materialdesigndemo.R;
 import com.gtrj.docdeal.adapter.DocMainListAdapter;
@@ -173,11 +175,19 @@ public class DocMainList extends Activity implements
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             // Respond to the action bar's Up/Home button
+            case R.id.search_btn:
+                Toast.makeText(this,  "查询", Toast.LENGTH_SHORT).show();
+                break;
             case android.R.id.home:
                 NavUtils.navigateUpFromSameTask(this);
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
-
+    //生成对应的菜单,并添加到Menu中
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
 }
