@@ -1,6 +1,7 @@
 package com.gtrj.docdeal.adapter;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 
 import android.view.View;
@@ -31,7 +32,7 @@ public class DocMainListAdapter extends RecyclerView.Adapter<DocMainListAdapter.
 
     @Override
     public void onBindViewHolder(ContactViewHolder contactViewHolder, int i) {
-        DocInfo ci = contactList.get(i);
+        DocInfo ci = contactList.get(contactList.size()-1-i);
         contactViewHolder.vTitle.setText(StringUtil.replaceBlank(ci.getTitle().length() > 15 ? ci.getTitle().substring(0, 15) + "..." : ci.getTitle()));
         contactViewHolder.vDate.setText(ci.getDate());
         contactViewHolder.vSender.setText(ci.getSender());

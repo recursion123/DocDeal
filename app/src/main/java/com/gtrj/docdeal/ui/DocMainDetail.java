@@ -10,9 +10,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 
-
+import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
 import com.gc.materialdesigndemo.R;
 import com.gtrj.docdeal.adapter.DocDetailAdapter;
 import com.gtrj.docdeal.net.WebService;
@@ -38,6 +39,8 @@ public class DocMainDetail extends Activity {
     private String docId;
     private RecyclerView recList;
     private DocDetailAdapter cAdapter;
+    private ProgressBarCircularIndeterminate loading;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,7 +52,11 @@ public class DocMainDetail extends Activity {
         actionBar.setHomeButtonEnabled(true);
         actionBar.setTitle("公文详细");
 
+        loading = (ProgressBarCircularIndeterminate) findViewById(R.id.loading);
+        loading.setVisibility(View.VISIBLE);
+
         recList = (RecyclerView) findViewById(R.id.cardDetail);
+        recList.setVisibility(RecyclerView.INVISIBLE);
         recList.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
@@ -80,6 +87,8 @@ public class DocMainDetail extends Activity {
                     break;
                 case 2:
                     cAdapter.notifyDataSetChanged();
+                    recList.setVisibility(RecyclerView.VISIBLE);
+                    loading.setVisibility(View.INVISIBLE);
                     break;
                 default:
                     break;

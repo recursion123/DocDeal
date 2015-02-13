@@ -1,16 +1,16 @@
 package com.gtrj.docdeal.adapter;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.beardedhen.androidbootstrap.BootstrapEditText;
 import com.gc.materialdesigndemo.R;
 
@@ -22,7 +22,7 @@ import java.util.Map;
  */
 public class DocDetailAdapter extends RecyclerView.Adapter<DocDetailAdapter.DetailViewHolder> {
     public Map[] detailData;
-
+    private int w_screen;
     public DocDetailAdapter(Map[] detailData) {
         this.detailData = detailData;
     }
@@ -34,6 +34,7 @@ public class DocDetailAdapter extends RecyclerView.Adapter<DocDetailAdapter.Deta
 
     @Override
     public void onBindViewHolder(DetailViewHolder detailViewHolder, int i) {
+
 
 
         if (detailData[0] != null) {
@@ -56,14 +57,14 @@ public class DocDetailAdapter extends RecyclerView.Adapter<DocDetailAdapter.Deta
                 TextView tv = new TextView(detailViewHolder.cardBaseInfo.getContext());
                 tv.setText(e.toString());
                 tv.setHeight(120);
-                tv.setWidth(300);
+                tv.setWidth(w_screen*30/109);
                 tv.setGravity(Gravity.CENTER);
                 tr.addView(tv);
 
                 TextView tv2 = new TextView(detailViewHolder.cardBaseInfo.getContext());
                 tv2.setText(detailData[0].get(e).toString());
                 tv2.setGravity(Gravity.CENTER);
-                tv2.setWidth(650);
+                tv2.setWidth(w_screen*67/109);
                 tr.addView(tv2);
                 detailViewHolder.cardBaseInfo.addView(tr);
             }
@@ -91,14 +92,14 @@ public class DocDetailAdapter extends RecyclerView.Adapter<DocDetailAdapter.Deta
                 TextView tv = new TextView(detailViewHolder.cardFormInfo.getContext());
                 tv.setText(e.toString());
                 tv.setHeight(120);
-                tv.setWidth(300);
+                tv.setWidth(w_screen*30/109);
                 tv.setGravity(Gravity.CENTER);
                 tr.addView(tv);
                 if (((String[]) detailData[1].get(e))[1].equals("true")) {
                     BootstrapEditText bet = new BootstrapEditText(detailViewHolder.cardFormInfo.getContext());
                     bet.setText(((String[]) detailData[1].get(e))[0]);
                     bet.setGravity(Gravity.CENTER);
-                    bet.setWidth(650);
+                    bet.setWidth(w_screen*67/109);
                     tr.addView(bet);
                     detailViewHolder.cardFormInfo.addView(tr);
                 } else {
@@ -106,7 +107,7 @@ public class DocDetailAdapter extends RecyclerView.Adapter<DocDetailAdapter.Deta
                         TextView tv2 = new TextView(detailViewHolder.cardFormInfo.getContext());
                         tv2.setText(((String[]) detailData[1].get(e))[0]);
                         tv2.setGravity(Gravity.CENTER);
-                        tv2.setWidth(650);
+                        tv2.setWidth(w_screen*67/109);
                         tr.addView(tv2);
                         detailViewHolder.cardFormInfo.addView(tr);
                     }
@@ -119,6 +120,9 @@ public class DocDetailAdapter extends RecyclerView.Adapter<DocDetailAdapter.Deta
 
     @Override
     public DetailViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+        DisplayMetrics dm =viewGroup.getContext().getResources().getDisplayMetrics();
+         w_screen = dm.widthPixels;
+        Log.e("width", String.valueOf(w_screen));
         View itemView = LayoutInflater.
                 from(viewGroup.getContext()).
                 inflate(R.layout.carddetail, viewGroup, false);

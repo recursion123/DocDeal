@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
 import com.gc.materialdesigndemo.R;
 import com.gtrj.docdeal.adapter.DocMainListAdapter;
 import com.gtrj.docdeal.bean.DocInfo;
@@ -48,7 +49,8 @@ public class DocMainList extends Activity implements
     private boolean isRefresh = false;
     private int page=1;
     private Context context;
-    private DrawerLayout mDrawerLayout;
+    private ProgressBarCircularIndeterminate loading;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +60,9 @@ public class DocMainList extends Activity implements
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
+
+        loading = (ProgressBarCircularIndeterminate) findViewById(R.id.loading);
+        loading.setVisibility(View.VISIBLE);
 
         swipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
         swipeLayout.setOnRefreshListener(this);
@@ -76,7 +81,7 @@ public class DocMainList extends Activity implements
                         Intent intent=new Intent();
                         intent.setClass(context,DocMainDetail.class);
                         Bundle bundle=new Bundle();
-                        bundle.putString("DocId",list.get(position).getId());
+                        bundle.putString("DocId",list.get(list.size()-1-position).getId());
                         intent.putExtras(bundle);
                         startActivity(intent);
                     }
@@ -94,7 +99,7 @@ public class DocMainList extends Activity implements
                     Thread t = new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            cAdapter.contactList.addAll(0,parserXml(getListData(page)));
+                            cAdapter.contactList.addAll(cAdapter.contactList.size(),parserXml(getListData(page)));
                             Message msg = msgHandler.obtainMessage();
                             msg.arg1 = 2;
                             msgHandler.sendMessage(msg);
@@ -104,6 +109,7 @@ public class DocMainList extends Activity implements
                     break;
                 case 2:
                     cAdapter.notifyDataSetChanged();
+                    loading.setVisibility(View.INVISIBLE);
                     break;
                 default:
                     break;
