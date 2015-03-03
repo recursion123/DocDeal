@@ -1,5 +1,7 @@
 package com.gtrj.docdeal.adapter;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -11,10 +13,20 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.beardedhen.androidbootstrap.BootstrapEditText;
+import com.gc.materialdesign.views.ButtonFlat;
+import com.gc.materialdesign.widgets.Dialog;
 import com.gc.materialdesigndemo.R;
+import com.gtrj.docdeal.ui.DocMainDetail;
+import com.gtrj.docdeal.ui.DocMainDetailText;
 
 
+import org.textmining.text.extraction.WordExtractor;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.Map;
 
 /**
@@ -23,6 +35,7 @@ import java.util.Map;
 public class DocDetailAdapter extends RecyclerView.Adapter<DocDetailAdapter.DetailViewHolder> {
     public Map[] detailData;
     private int w_screen;
+
     public DocDetailAdapter(Map[] detailData) {
         this.detailData = detailData;
     }
@@ -34,7 +47,6 @@ public class DocDetailAdapter extends RecyclerView.Adapter<DocDetailAdapter.Deta
 
     @Override
     public void onBindViewHolder(DetailViewHolder detailViewHolder, int i) {
-
 
 
         if (detailData[0] != null) {
@@ -57,14 +69,14 @@ public class DocDetailAdapter extends RecyclerView.Adapter<DocDetailAdapter.Deta
                 TextView tv = new TextView(detailViewHolder.cardBaseInfo.getContext());
                 tv.setText(e.toString());
                 tv.setHeight(120);
-                tv.setWidth(w_screen*30/109);
+                tv.setWidth(w_screen * 30 / 109);
                 tv.setGravity(Gravity.CENTER);
                 tr.addView(tv);
 
                 TextView tv2 = new TextView(detailViewHolder.cardBaseInfo.getContext());
                 tv2.setText(detailData[0].get(e).toString());
                 tv2.setGravity(Gravity.CENTER);
-                tv2.setWidth(w_screen*67/109);
+                tv2.setWidth(w_screen * 67 / 109);
                 tr.addView(tv2);
                 detailViewHolder.cardBaseInfo.addView(tr);
             }
@@ -92,14 +104,14 @@ public class DocDetailAdapter extends RecyclerView.Adapter<DocDetailAdapter.Deta
                 TextView tv = new TextView(detailViewHolder.cardFormInfo.getContext());
                 tv.setText(e.toString());
                 tv.setHeight(120);
-                tv.setWidth(w_screen*30/109);
+                tv.setWidth(w_screen * 30 / 109);
                 tv.setGravity(Gravity.CENTER);
                 tr.addView(tv);
                 if (((String[]) detailData[1].get(e))[1].equals("true")) {
                     BootstrapEditText bet = new BootstrapEditText(detailViewHolder.cardFormInfo.getContext());
                     bet.setText(((String[]) detailData[1].get(e))[0]);
                     bet.setGravity(Gravity.CENTER);
-                    bet.setWidth(w_screen*67/109);
+                    bet.setWidth(w_screen * 67 / 109);
                     tr.addView(bet);
                     detailViewHolder.cardFormInfo.addView(tr);
                 } else {
@@ -107,7 +119,7 @@ public class DocDetailAdapter extends RecyclerView.Adapter<DocDetailAdapter.Deta
                         TextView tv2 = new TextView(detailViewHolder.cardFormInfo.getContext());
                         tv2.setText(((String[]) detailData[1].get(e))[0]);
                         tv2.setGravity(Gravity.CENTER);
-                        tv2.setWidth(w_screen*67/109);
+                        tv2.setWidth(w_screen * 67 / 109);
                         tr.addView(tv2);
                         detailViewHolder.cardFormInfo.addView(tr);
                     }
@@ -115,13 +127,56 @@ public class DocDetailAdapter extends RecyclerView.Adapter<DocDetailAdapter.Deta
             }
             detailViewHolder.cardFormInfo.getChildAt(detailViewHolder.cardFormInfo.getChildCount() - 1).setBackgroundResource(R.drawable.cell_shape_bottom);
         }
-
+        detailViewHolder.docText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (DocMainDetail.docPath != null) {
+                    final Dialog dialog = new Dialog(v.getContext(), "提示", "请选择打开方式");
+                    dialog.setOnAcceptButtonClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent("android.intent.action.VIEW");
+                            intent.addCategory("android.intent.category.DEFAULT");
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            Uri uri = Uri.fromFile(new File(DocMainDetail.docPath));
+                            intent.setDataAndType(uri, "application/msword");
+                            v.getContext().startActivity(intent);
+                        }
+                    });
+                    dialog.setOnCancelButtonClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            WordExtractor w = new WordExtractor();
+                            InputStream is = null;
+                            String str = null;
+                            try {
+                                is = new FileInputStream(new File(DocMainDetail.docPath));
+                                str = w.extractText(is).replaceAll("-\\s\\d+\\s-", "").replaceAll("", "");
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            Intent intent = new Intent(v.getContext(), DocMainDetailText.class);
+                            intent.putExtra("text", str);
+                            v.getContext().startActivity(intent);
+                        }
+                    });
+                    dialog.show();
+                    dialog.getButtonAccept().setText("word方式");
+                    dialog.getButtonCancel().setText("文本方式");
+                } else {
+                    final Dialog dialog = new Dialog(v.getContext(), "提示", "没有可以查看的正文");
+                    dialog.show();
+                    dialog.getButtonAccept().setText("确定");
+                    dialog.getButtonCancel().setVisibility(BootstrapButton.INVISIBLE);
+                }
+            }
+        });
     }
 
     @Override
     public DetailViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        DisplayMetrics dm =viewGroup.getContext().getResources().getDisplayMetrics();
-         w_screen = dm.widthPixels;
+        DisplayMetrics dm = viewGroup.getContext().getResources().getDisplayMetrics();
+        w_screen = dm.widthPixels;
         Log.e("width", String.valueOf(w_screen));
         View itemView = LayoutInflater.
                 from(viewGroup.getContext()).
@@ -132,11 +187,15 @@ public class DocDetailAdapter extends RecyclerView.Adapter<DocDetailAdapter.Deta
     public static class DetailViewHolder extends RecyclerView.ViewHolder {
         protected TableLayout cardBaseInfo;
         protected TableLayout cardFormInfo;
+        protected BootstrapButton docText;
+        protected BootstrapButton docAccessory;
 
         public DetailViewHolder(View v) {
             super(v);
             cardBaseInfo = (TableLayout) v.findViewById(R.id.cardBaseInfo);
             cardFormInfo = (TableLayout) v.findViewById(R.id.cardFormInfo);
+            docText = (BootstrapButton) v.findViewById(R.id.docText);
+            docAccessory = (BootstrapButton) v.findViewById(R.id.docAccessory);
         }
     }
 }

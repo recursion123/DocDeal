@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:id="@+id/login">
-
     <com.beardedhen.androidbootstrap.BootstrapEditText
         android:id="@+id/username"
         android:layout_width="250dp"

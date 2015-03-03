@@ -8,6 +8,7 @@ import android.os.Message;
 import android.support.v4.app.NavUtils;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,6 +18,7 @@ import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
 import com.gc.materialdesigndemo.R;
 import com.gtrj.docdeal.adapter.DocDetailAdapter;
 import com.gtrj.docdeal.net.WebService;
+import com.gtrj.docdeal.util.Base64Util;
 import com.gtrj.docdeal.util.ContextString;
 
 import org.dom4j.Attribute;
@@ -27,6 +29,8 @@ import org.dom4j.Element;
 import org.dom4j.Node;
 import org.ksoap2.serialization.SoapObject;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,12 +44,15 @@ public class DocMainDetail extends Activity {
     private RecyclerView recList;
     private DocDetailAdapter cAdapter;
     private ProgressBarCircularIndeterminate loading;
+    public static String docPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_doc_main_detail);
         docId = getIntent().getExtras().get("DocId").toString();
+
+        docPath = null;
 
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -61,7 +68,7 @@ public class DocMainDetail extends Activity {
         LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recList.setLayoutManager(llm);
-        final   Map[] detailData = new Map[2];
+        final Map[] detailData = new Map[2];
         cAdapter = new DocDetailAdapter(detailData);
         recList.setAdapter(cAdapter);
 
@@ -132,6 +139,7 @@ public class DocMainDetail extends Activity {
             Element doc = root.element("公文");
             Element basicData = doc.element("基本信息");
             Element formData = doc.element("表单");
+            Element text = doc.element("正文");
             for (int i = 0; i < basicData.nodeCount(); i++) {
                 Node data = basicData.getXPathResult(i);
                 if (data != null && data.getName() != null && !data.getName().equals("null") && !data.getName().equals("公文标识")) {
@@ -148,6 +156,9 @@ public class DocMainDetail extends Activity {
                         maps[1].put(data.getName(), new String[]{data.getText(), "false"});
                     }
                 }
+            }
+            if (text != null && text.getText() != null&&!"".equals(text.getText())) {
+                docPath = Base64Util.decoderBase64FileWithFileName(text.getText(), "maintext.doc");
             }
         } catch (DocumentException e) {
             System.out.println(e.getMessage());
