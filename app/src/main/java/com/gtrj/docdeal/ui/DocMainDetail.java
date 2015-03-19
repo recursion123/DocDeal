@@ -8,7 +8,6 @@ import android.os.Message;
 import android.support.v4.app.NavUtils;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,9 +28,12 @@ import org.dom4j.Element;
 import org.dom4j.Node;
 import org.ksoap2.serialization.SoapObject;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -45,6 +47,7 @@ public class DocMainDetail extends Activity {
     private DocDetailAdapter cAdapter;
     private ProgressBarCircularIndeterminate loading;
     public static String docPath;
+    public List<String> accessorys;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +72,8 @@ public class DocMainDetail extends Activity {
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recList.setLayoutManager(llm);
         final Map[] detailData = new Map[2];
-        cAdapter = new DocDetailAdapter(detailData);
+        accessorys=new ArrayList<>();
+        cAdapter = new DocDetailAdapter(detailData,accessorys);
         recList.setAdapter(cAdapter);
 
         Message msg = msgHandler.obtainMessage();
@@ -123,13 +127,25 @@ public class DocMainDetail extends Activity {
         switch (item.getItemId()) {
             // Respond to the action bar's Up/Home button
             case android.R.id.home:
-                NavUtils.navigateUpFromSameTask(this);
+                finish();
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
     private Map[] parserXml(String xml) {
+        File file = new File("/sdcard/myDoc/");
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        String filePath = "/sdcard/myDoc/" + "text.txt";
+        try {
+            FileOutputStream out = new FileOutputStream(filePath);
+            out.write(xml.getBytes());
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         Map[] maps = new Map[2];
         maps[0] = new HashMap<String, String>();
         maps[1] = new HashMap<String, String[]>();
@@ -140,6 +156,7 @@ public class DocMainDetail extends Activity {
             Element basicData = doc.element("基本信息");
             Element formData = doc.element("表单");
             Element text = doc.element("正文");
+            Element accessory = doc.element("附件部分");
             for (int i = 0; i < basicData.nodeCount(); i++) {
                 Node data = basicData.getXPathResult(i);
                 if (data != null && data.getName() != null && !data.getName().equals("null") && !data.getName().equals("公文标识")) {
@@ -154,6 +171,15 @@ public class DocMainDetail extends Activity {
                         maps[1].put(data.getName(), new String[]{data.getText(), "true"});
                     } else {
                         maps[1].put(data.getName(), new String[]{data.getText(), "false"});
+                    }
+                }
+            }
+            for ( Iterator i = accessory.elementIterator(); i.hasNext(); ) {
+                Element element = (Element) i.next();
+                for ( Iterator m = element.elementIterator(); m.hasNext(); ) {
+                    Element childElement = (Element) m.next();
+                    if("标题".equals(childElement.getName())){
+                        accessorys.add(childElement.getText());
                     }
                 }
             }

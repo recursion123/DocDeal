@@ -9,4 +9,5 @@ public class ContextString {
     public static final String Login="getUserExist";
     public static final String DocMainList="getWaitTodo";
     public static final String DocMainDetail="getMobileGWInfo";
+    public static  final String DocMainDetailAccessory="getFJFileBase64Content";
 }

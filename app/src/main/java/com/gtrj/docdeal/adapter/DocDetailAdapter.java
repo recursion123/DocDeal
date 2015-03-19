@@ -1,14 +1,18 @@
 package com.gtrj.docdeal.adapter;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -17,6 +21,7 @@ import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.beardedhen.androidbootstrap.BootstrapEditText;
 import com.gc.materialdesign.views.ButtonFlat;
 import com.gc.materialdesign.widgets.Dialog;
+import com.gc.materialdesign.widgets.PopWindow;
 import com.gc.materialdesigndemo.R;
 import com.gtrj.docdeal.ui.DocMainDetail;
 import com.gtrj.docdeal.ui.DocMainDetailText;
@@ -27,6 +32,7 @@ import org.textmining.text.extraction.WordExtractor;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -35,9 +41,11 @@ import java.util.Map;
 public class DocDetailAdapter extends RecyclerView.Adapter<DocDetailAdapter.DetailViewHolder> {
     public Map[] detailData;
     private int w_screen;
+    public List<String> accessorys;
 
-    public DocDetailAdapter(Map[] detailData) {
+    public DocDetailAdapter(Map[] detailData, List accessorys) {
         this.detailData = detailData;
+        this.accessorys = accessorys;
     }
 
     @Override
@@ -168,6 +176,39 @@ public class DocDetailAdapter extends RecyclerView.Adapter<DocDetailAdapter.Deta
                     dialog.show();
                     dialog.getButtonAccept().setText("确定");
                     dialog.getButtonCancel().setVisibility(BootstrapButton.INVISIBLE);
+                }
+            }
+        });
+        detailViewHolder.docAccessory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final PopWindow popWindow = new PopWindow(v.getContext(), "附件列表");
+                popWindow.show();
+                if (accessorys.size() == 0) {
+                    TextView textView=new TextView(v.getContext());
+                    textView.setTextSize(18);
+                    textView.setText("没有可以查看的附件！");
+                    popWindow.addNewView(textView);
+                } else {
+                    for (String s : accessorys) {
+                        Button btn = new Button(v.getContext());
+                        btn.setBackgroundColor(Color.alpha(0));
+                        btn.setText(s);
+                        btn.setTextColor(Color.parseColor("#1E88E5"));
+                        btn.setOnTouchListener(new View.OnTouchListener() {
+                            @Override
+                            public boolean onTouch(View v, MotionEvent event) {
+                                // TODO Auto-generated method stub
+                                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                                    v.setBackgroundColor(Color.parseColor("#1E90FF"));
+                                } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                                    v.setBackgroundColor(Color.alpha(0));
+                                }
+                                return false;
+                            }
+                        });
+                        popWindow.addNewView(btn);
+                    }
                 }
             }
         });

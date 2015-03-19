@@ -42,14 +42,12 @@
             android:name="com.gtrj.docdeal.ui.DocMainDetail"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.gtrj.docdeal.ui.DocMainList" />
         </activity>
         <activity
             android:name="com.gtrj.docdeal.ui.DocMainDetailText"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait">
+        </activity>
     </application>
 
 </manifest>
