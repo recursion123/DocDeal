@@ -180,7 +180,8 @@ containing a value of this type.
         public static int blue=0x7f060005;
         public static int button_accept=0x7f06000c;
         public static int button_cancel=0x7f06000b;
-        public static int buttonflat=0x7f06000f;
+        public static int button_scrollView=0x7f06000f;
+        public static int buttonflat=0x7f060011;
         public static int contentDialog=0x7f060007;
         public static int contentSelector=0x7f060001;
         public static int dialog_rootView=0x7f060006;
@@ -188,11 +189,12 @@ containing a value of this type.
         public static int message=0x7f06000a;
         public static int message_scrollView=0x7f060009;
         public static int number_indicator_spinner_content=0x7f06000d;
+        public static int pop_win=0x7f06000e;
         public static int red=0x7f060003;
         public static int rootSelector=0x7f060000;
-        public static int shape_bacground=0x7f060011;
-        public static int snackbar=0x7f06000e;
-        public static int text=0x7f060010;
+        public static int shape_bacground=0x7f060013;
+        public static int snackbar=0x7f060010;
+        public static int text=0x7f060012;
         public static int title=0x7f060008;
         public static int viewColor=0x7f060002;
     }
@@ -200,7 +202,8 @@ containing a value of this type.
         public static int color_selector=0x7f030000;
         public static int dialog=0x7f030001;
         public static int number_indicator_spinner=0x7f030002;
-        public static int snackbar=0x7f030003;
+        public static int pop_window=0x7f030003;
+        public static int snackbar=0x7f030004;
     }
     public static final class styleable {
         /** Attributes that can be used with a CustomAttributes.
