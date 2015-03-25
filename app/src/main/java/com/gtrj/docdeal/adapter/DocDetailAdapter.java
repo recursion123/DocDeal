@@ -195,18 +195,6 @@ public class DocDetailAdapter extends RecyclerView.Adapter<DocDetailAdapter.Deta
                         btn.setBackgroundColor(Color.alpha(0));
                         btn.setText(s);
                         btn.setTextColor(Color.parseColor("#1E88E5"));
-                        btn.setOnTouchListener(new View.OnTouchListener() {
-                            @Override
-                            public boolean onTouch(View v, MotionEvent event) {
-                                // TODO Auto-generated method stub
-                                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                                    v.setBackgroundColor(Color.parseColor("#1E90FF"));
-                                } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                                    v.setBackgroundColor(Color.alpha(0));
-                                }
-                                return false;
-                            }
-                        });
                         popWindow.addNewView(btn);
                     }
                 }

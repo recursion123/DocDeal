@@ -2,12 +2,15 @@ package com.gtrj.docdeal.ui;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.NavUtils;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,6 +22,7 @@ import com.gtrj.docdeal.adapter.DocDetailAdapter;
 import com.gtrj.docdeal.net.WebService;
 import com.gtrj.docdeal.util.Base64Util;
 import com.gtrj.docdeal.util.ContextString;
+import com.gtrj.docdeal.util.SerializableMap;
 
 import org.dom4j.Attribute;
 import org.dom4j.Document;
@@ -47,7 +51,9 @@ public class DocMainDetail extends Activity {
     private DocDetailAdapter cAdapter;
     private ProgressBarCircularIndeterminate loading;
     public static String docPath;
-    public List<String> accessorys;
+    private List<String> accessorys;
+    private Map<String, Map<String, String>> flows;
+    public Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +62,8 @@ public class DocMainDetail extends Activity {
         docId = getIntent().getExtras().get("DocId").toString();
 
         docPath = null;
+
+        context = this;
 
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -72,8 +80,8 @@ public class DocMainDetail extends Activity {
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recList.setLayoutManager(llm);
         final Map[] detailData = new Map[2];
-        accessorys=new ArrayList<>();
-        cAdapter = new DocDetailAdapter(detailData,accessorys);
+        accessorys = new ArrayList<>();
+        cAdapter = new DocDetailAdapter(detailData, accessorys);
         recList.setAdapter(cAdapter);
 
         Message msg = msgHandler.obtainMessage();
@@ -129,6 +137,13 @@ public class DocMainDetail extends Activity {
             case android.R.id.home:
                 finish();
                 return true;
+            case R.id.next:
+                Intent intent = new Intent(context, DocSubmit.class);
+                final SerializableMap serializableMap = new SerializableMap();
+                serializableMap.setMap(flows);
+                intent.putExtra("flowData", serializableMap);
+                context.startActivity(intent);
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -157,6 +172,7 @@ public class DocMainDetail extends Activity {
             Element formData = doc.element("表单");
             Element text = doc.element("正文");
             Element accessory = doc.element("附件部分");
+            Element flow = doc.element("流程相关");
             for (int i = 0; i < basicData.nodeCount(); i++) {
                 Node data = basicData.getXPathResult(i);
                 if (data != null && data.getName() != null && !data.getName().equals("null") && !data.getName().equals("公文标识")) {
@@ -174,16 +190,30 @@ public class DocMainDetail extends Activity {
                     }
                 }
             }
-            for ( Iterator i = accessory.elementIterator(); i.hasNext(); ) {
+            for (Iterator i = accessory.elementIterator(); i.hasNext(); ) {
                 Element element = (Element) i.next();
-                for ( Iterator m = element.elementIterator(); m.hasNext(); ) {
+                for (Iterator m = element.elementIterator(); m.hasNext(); ) {
                     Element childElement = (Element) m.next();
-                    if("标题".equals(childElement.getName())){
+                    if ("标题".equals(childElement.getName())) {
                         accessorys.add(childElement.getText());
                     }
                 }
             }
-            if (text != null && text.getText() != null&&!"".equals(text.getText())) {
+            flows = new HashMap<>();
+            if (flow != null) {
+                for (Iterator i = flow.elementIterator(); i.hasNext(); ) {
+                    Element element = (Element) i.next();
+                    Map<String, String> map = new HashMap<>();
+                    for (Iterator m = element.elementIterator(); m.hasNext(); ) {
+                        Element childElement = (Element) m.next();
+                        if ("User".equals(childElement.getName())) {
+                            map.put(childElement.getText(), childElement.attributeValue("id"));
+                        }
+                    }
+                    flows.put(element.attributeValue("name"), map);
+                }
+            }
+            if (text != null && text.getText() != null && !"".equals(text.getText())) {
                 docPath = Base64Util.decoderBase64FileWithFileName(text.getText(), "maintext.doc");
             }
         } catch (DocumentException e) {
