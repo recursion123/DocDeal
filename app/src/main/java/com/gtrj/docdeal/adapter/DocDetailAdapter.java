@@ -1,12 +1,11 @@
 package com.gtrj.docdeal.adapter;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -195,6 +194,7 @@ public class DocDetailAdapter extends RecyclerView.Adapter<DocDetailAdapter.Deta
                         btn.setBackgroundColor(Color.alpha(0));
                         btn.setText(s);
                         btn.setTextColor(Color.parseColor("#1E88E5"));
+                        btn.setBackground(v.getContext().getResources().getDrawable(R.drawable.item_select));
                         popWindow.addNewView(btn);
                     }
                 }
@@ -206,7 +206,6 @@ public class DocDetailAdapter extends RecyclerView.Adapter<DocDetailAdapter.Deta
     public DetailViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         DisplayMetrics dm = viewGroup.getContext().getResources().getDisplayMetrics();
         w_screen = dm.widthPixels;
-        Log.e("width", String.valueOf(w_screen));
         View itemView = LayoutInflater.
                 from(viewGroup.getContext()).
                 inflate(R.layout.carddetail, viewGroup, false);

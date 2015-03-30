@@ -10,6 +10,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.View;
 import android.view.Window;
 import android.view.View.OnClickListener;
@@ -50,7 +51,8 @@ public class MainActivity extends Activity{
 
         	@Override
         	public void onClick(View arg0) {
-
+                Intent intent = new Intent(MainActivity.this,Contacts.class);
+                startActivity(intent);
         	}
         });
         layoutRipple = (LayoutRipple) findViewById(R.id.dateManage);

@@ -6,6 +6,7 @@
         <item name="android:windowContentOverlay">@drawable/actionbar_shadow</item>
         <item name="android:homeAsUpIndicator">@drawable/ic_ab_up_compat</item>
         <item name="android:actionOverflowButtonStyle">@style/AppTheme_ActionBar_Overflow</item>
+       <!-- <item name="android:actionBarTabStyle">@style/AppTheme_ActionBar_Tab</item>-->
     </style>
 
     <style name="AppTheme_ActionBar" parent="android:Widget.Holo.ActionBar.Solid">
@@ -21,6 +22,9 @@
 
     <style name="AppTheme_ActionBar_Overflow" parent="android:Widget.ActionButton.Overflow">
         <item name="android:src">@drawable/ic_ab_overflow_compat</item>
+    </style>
+    <style name="AppTheme_ActionBar_Tab" parent="android:Widget.Holo.ActionBar.TabView">
+        <item name="android:background">#16FAFA</item>
     </style>
 </resources>
 

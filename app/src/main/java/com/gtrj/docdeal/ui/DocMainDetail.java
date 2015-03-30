@@ -5,12 +5,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.NavUtils;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -149,11 +148,12 @@ public class DocMainDetail extends Activity {
     }
 
     private Map[] parserXml(String xml) {
-        File file = new File("/sdcard/myDoc/");
+
+        File file = new File(Environment.getExternalStorageState() + "/myDoc/");
         if (!file.exists()) {
             file.mkdirs();
         }
-        String filePath = "/sdcard/myDoc/" + "text.txt";
+        String filePath = Environment.getExternalStorageState() + "/myDoc/text.txt";
         try {
             FileOutputStream out = new FileOutputStream(filePath);
             out.write(xml.getBytes());
