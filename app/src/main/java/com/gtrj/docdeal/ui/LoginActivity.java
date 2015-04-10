@@ -46,12 +46,12 @@ public class LoginActivity extends Activity {
         SharedPreferences preferences=getSharedPreferences("docdeal", 0);
         String s=preferences.getString("login", "");
 
-        /*//如果状态为已登录则跳转到主菜单
+        //如果状态为已登录则跳转到主菜单
         if(!s.equals("")){
             Intent intent = new Intent(loginContext, MainActivity.class);
             startActivity(intent);
             finish();
-        }*/
+        }
 
         loginActivity = (LinearLayout) findViewById(R.id.login);
         loginActivity.setBackgroundResource(R.drawable.bg);
