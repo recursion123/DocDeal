@@ -13,7 +13,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,13 +22,13 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
 import com.gc.materialdesigndemo.R;
 import com.gtrj.docdeal.bean.ContactItem;
 import com.gtrj.docdeal.customView.AlphaView;
 import com.gtrj.docdeal.net.WebService;
 import com.gtrj.docdeal.util.ContextString;
 import com.gtrj.docdeal.util.PinYin;
-import com.gtrj.docdeal.util.util;
 
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -49,7 +48,6 @@ import java.util.Map;
  */
 public class Contacts extends FragmentActivity implements ActionBar.TabListener {
     AppSectionsPagerAdapter mAppSectionsPagerAdapter;
-
     ViewPager mViewPager;
 
     @Override
@@ -105,14 +103,8 @@ public class Contacts extends FragmentActivity implements ActionBar.TabListener 
         @Override
         public Fragment getItem(int i) {
             switch (i) {
-                case 0:
-                    Fragment fragment = new DummySectionFragment();
-                    return fragment;
-
                 default:
-                    // The other sections of the app are dummy placeholders.
-                    Fragment fragment1 = new DummySectionFragment();
-                    return fragment1;
+                    return new DummySectionFragment(i + "");
             }
         }
 
@@ -125,11 +117,11 @@ public class Contacts extends FragmentActivity implements ActionBar.TabListener 
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "个人通讯录";
-                case 1:
                     return "单位通讯录";
-                case 2:
+                case 1:
                     return "公共通讯录";
+                case 2:
+                    return "个人通讯录";
                 default:
                     return "test";
             }
@@ -137,6 +129,10 @@ public class Contacts extends FragmentActivity implements ActionBar.TabListener 
     }
 
     public static class DummySectionFragment extends Fragment implements AlphaView.OnAlphaChangedListener {
+        private String type;
+
+        private ProgressBarCircularIndeterminate loading;
+
         private ListView listView;
         private AlphaView alphaView;
         private TextView overlay;
@@ -149,17 +145,25 @@ public class Contacts extends FragmentActivity implements ActionBar.TabListener 
         private Context context;
         private View rootView;
 
+        public DummySectionFragment(String type) {
+            this.type = type;
+        }
+
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             rootView = inflater.inflate(R.layout.fragment_section_dummy, container, false);
             context = rootView.getContext();
-            list = new ArrayList<ContactItem>();
-            alphaIndexer = new HashMap<String, Integer>();
+
+            loading = (ProgressBarCircularIndeterminate) rootView.findViewById(R.id.loading);
+            loading.setVisibility(View.VISIBLE);
+
+            list = new ArrayList<>();
+            alphaIndexer = new HashMap<>();
             overlayThread = new OverlayThread();
             adapter = new ListAdapter(context, list);
-            intitWidget();
-            initOverlay();
+            /*intitWidget();
+            initOverlay();*/
             Message msg = msgHandler.obtainMessage();
             msg.arg1 = 1;
             msgHandler.sendMessage(msg);
@@ -182,6 +186,7 @@ public class Contacts extends FragmentActivity implements ActionBar.TabListener 
                         t.start();
                         break;
                     case 2:
+                        loading.setVisibility(View.INVISIBLE);
                         adapter = new ListAdapter(context, list);
                         intitWidget();
                         initOverlay();
@@ -194,11 +199,11 @@ public class Contacts extends FragmentActivity implements ActionBar.TabListener 
         };
 
         private String getData() {
-            Map<String, String> requestDatas = new HashMap<String, String>();
+            Map<String, String> requestDatas = new HashMap<>();
             SharedPreferences preferences = context.getSharedPreferences("docdeal", 0);
             String username = preferences.getString("login", "");
             requestDatas.put("orgId", username + ":allusers");
-            requestDatas.put("bookType", "1");
+            requestDatas.put("bookType", this.type);
             SoapObject obj = new WebService().GetObject(
                     ContextString.WebServiceURL,
                     ContextString.NameSpace,
@@ -283,6 +288,12 @@ public class Contacts extends FragmentActivity implements ActionBar.TabListener 
                     listView.setSelection(position);
                 }
             }
+        }
+
+        @Override
+        public void onStop() {
+            windowManager.removeViewImmediate(overlay);
+            super.onStop();
         }
 
         private class ListAdapter extends BaseAdapter {
