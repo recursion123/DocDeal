@@ -41,23 +41,23 @@
         <activity
             android:name="com.gtrj.docdeal.ui.DocMainDetail"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name="com.gtrj.docdeal.ui.DocMainDetailText"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name="com.gtrj.docdeal.ui.DocSubmit"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name="com.gtrj.docdeal.ui.Contacts"
             android:label="@string/menu3"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name="com.gtrj.docdeal.ui.ContactsDetail"
+            android:label="@string/menu3"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

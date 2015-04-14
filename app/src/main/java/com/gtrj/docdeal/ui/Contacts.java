@@ -3,6 +3,7 @@ package com.gtrj.docdeal.ui;
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
@@ -13,14 +14,17 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
 import com.gc.materialdesigndemo.R;
@@ -255,6 +259,14 @@ public class Contacts extends FragmentActivity implements ActionBar.TabListener 
         private void intitWidget() {
             listView = (ListView) rootView.findViewById(R.id.list_view);
             listView.setAdapter(adapter);
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString("id", list.get(position).getId());
+                    startActivity(new Intent(context, ContactsDetail.class).putExtras(bundle));
+                }
+            });
             alphaView = (AlphaView) rootView.findViewById(R.id.alphaView);
             alphaView.setOnAlphaChangedListener(this);
         }
@@ -278,7 +290,7 @@ public class Contacts extends FragmentActivity implements ActionBar.TabListener 
 
         @Override
         public void OnAlphaChanged(String s, int index) {
-            if (s != null && s.trim().length() > 0) {
+            if (overlay != null && s != null && s.trim().length() > 0) {
                 overlay.setText(s);
                 overlay.setVisibility(View.VISIBLE);
                 handler.removeCallbacks(overlayThread);
@@ -292,7 +304,15 @@ public class Contacts extends FragmentActivity implements ActionBar.TabListener 
 
         @Override
         public void onStop() {
-            windowManager.removeViewImmediate(overlay);
+            if (windowManager != null) {
+                try {
+                    windowManager.removeViewImmediate(overlay);
+                } catch (IllegalArgumentException e) {
+                    e.printStackTrace();
+                } finally {
+                    overlay = null;
+                }
+            }
             super.onStop();
         }
 
