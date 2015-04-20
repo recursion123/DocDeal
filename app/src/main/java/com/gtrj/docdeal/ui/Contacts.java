@@ -24,7 +24,6 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
 import com.gc.materialdesigndemo.R;
@@ -32,6 +31,7 @@ import com.gtrj.docdeal.bean.ContactItem;
 import com.gtrj.docdeal.customView.AlphaView;
 import com.gtrj.docdeal.net.WebService;
 import com.gtrj.docdeal.util.ContextString;
+import com.gtrj.docdeal.util.DocApplication;
 import com.gtrj.docdeal.util.PinYin;
 
 import org.dom4j.Document;
@@ -59,12 +59,13 @@ public class Contacts extends FragmentActivity implements ActionBar.TabListener 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts);
 
-        mAppSectionsPagerAdapter = new AppSectionsPagerAdapter(getSupportFragmentManager());
         final ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
+
+        mAppSectionsPagerAdapter = new AppSectionsPagerAdapter(getSupportFragmentManager());
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mAppSectionsPagerAdapter);
         mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
@@ -85,7 +86,9 @@ public class Contacts extends FragmentActivity implements ActionBar.TabListener 
 
     @Override
     public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
-
+        if (mViewPager != null) {
+            mViewPager.setCurrentItem(tab.getPosition());
+        }
     }
 
     @Override
@@ -99,7 +102,6 @@ public class Contacts extends FragmentActivity implements ActionBar.TabListener 
     }
 
     public static class AppSectionsPagerAdapter extends FragmentPagerAdapter {
-
         public AppSectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
@@ -139,7 +141,7 @@ public class Contacts extends FragmentActivity implements ActionBar.TabListener 
 
         private ListView listView;
         private AlphaView alphaView;
-        private TextView overlay;
+        public TextView overlay;
 
         private WindowManager windowManager;
         private List<ContactItem> list;
@@ -158,7 +160,6 @@ public class Contacts extends FragmentActivity implements ActionBar.TabListener 
                                  Bundle savedInstanceState) {
             rootView = inflater.inflate(R.layout.fragment_section_dummy, container, false);
             context = rootView.getContext();
-
             loading = (ProgressBarCircularIndeterminate) rootView.findViewById(R.id.loading);
             loading.setVisibility(View.VISIBLE);
 
@@ -166,11 +167,6 @@ public class Contacts extends FragmentActivity implements ActionBar.TabListener 
             alphaIndexer = new HashMap<>();
             overlayThread = new OverlayThread();
             adapter = new ListAdapter(context, list);
-            /*intitWidget();
-            initOverlay();*/
-            Message msg = msgHandler.obtainMessage();
-            msg.arg1 = 1;
-            msgHandler.sendMessage(msg);
             return rootView;
         }
 
@@ -203,6 +199,13 @@ public class Contacts extends FragmentActivity implements ActionBar.TabListener 
         };
 
         private String getData() {
+            if ("0".equals(this.type) && DocApplication.lruCache.get("UnitContacts") != null) {
+                return DocApplication.lruCache.get("UnitContacts").toString();
+            } else if ("1".equals(this.type) && DocApplication.lruCache.get("publicContacts") != null) {
+                return DocApplication.lruCache.get("publicContacts").toString();
+            } else if ("2".equals(this.type) && DocApplication.lruCache.get("personalContacts") != null) {
+                return DocApplication.lruCache.get("personalContacts").toString();
+            }
             Map<String, String> requestDatas = new HashMap<>();
             SharedPreferences preferences = context.getSharedPreferences("docdeal", 0);
             String username = preferences.getString("login", "");
@@ -213,8 +216,17 @@ public class Contacts extends FragmentActivity implements ActionBar.TabListener 
                     ContextString.NameSpace,
                     ContextString.DocContacts,
                     requestDatas);
+            Log.e("tag", "getdata");
+            String result = obj.getProperty(ContextString.DocContacts + "Return").toString();
             if (obj != null && obj.getPropertyCount() > 0) {
-                return obj.getProperty(ContextString.DocContacts + "Return").toString();
+                if ("0".equals(this.type)) {
+                    DocApplication.lruCache.put("UnitContacts", result);
+                } else if ("1".equals(this.type)) {
+                    DocApplication.lruCache.put("publicContacts", result);
+                } else {
+                    DocApplication.lruCache.put("personalContacts", result);
+                }
+                return result;
             } else {
                 return null;
             }
@@ -282,7 +294,7 @@ public class Contacts extends FragmentActivity implements ActionBar.TabListener 
                             | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                     PixelFormat.TRANSLUCENT);
             windowManager = (WindowManager) context
-                    .getSystemService(Context.WINDOW_SERVICE);
+                    .getSystemService(context.WINDOW_SERVICE);
             windowManager.addView(overlay, lp);
         }
 
@@ -303,17 +315,22 @@ public class Contacts extends FragmentActivity implements ActionBar.TabListener 
         }
 
         @Override
-        public void onStop() {
-            if (windowManager != null) {
-                try {
-                    windowManager.removeViewImmediate(overlay);
-                } catch (IllegalArgumentException e) {
-                    e.printStackTrace();
-                } finally {
-                    overlay = null;
-                }
+        public void onPause() {
+            try {
+                windowManager.removeView(overlay);
+                windowManager=null;
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            super.onStop();
+            super.onPause();
+        }
+
+        @Override
+        public void onResume() {
+            super.onResume();
+            Message msg = msgHandler.obtainMessage();
+            msg.arg1 = 1;
+            msgHandler.sendMessage(msg);
         }
 
         private class ListAdapter extends BaseAdapter {
@@ -389,14 +406,11 @@ public class Contacts extends FragmentActivity implements ActionBar.TabListener 
 
 
         private class OverlayThread implements Runnable {
-
             @Override
             public void run() {
                 overlay.setVisibility(View.GONE);
             }
-
         }
-
     }
 
 

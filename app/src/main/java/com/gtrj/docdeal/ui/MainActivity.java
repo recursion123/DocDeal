@@ -7,6 +7,7 @@ import com.nineoldandroids.view.ViewHelper;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ public class MainActivity extends Activity{
 
 	int backgroundColor = Color.parseColor("#1E88E5");
 	ButtonFloatSmall buttonSelectColor;
+    public  static Context context;
 
     @SuppressLint("NewApi")
 	@Override
@@ -29,7 +31,7 @@ public class MainActivity extends Activity{
         setContentView(R.layout.activity_main);
 
         LayoutRipple layoutRipple = (LayoutRipple) findViewById(R.id.docdeal);
-
+        context=this;
 
         setOriginRiple(layoutRipple);
 
