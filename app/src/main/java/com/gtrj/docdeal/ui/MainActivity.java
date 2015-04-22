@@ -20,7 +20,6 @@ import android.view.View.OnClickListener;
 public class MainActivity extends Activity{
 
 	int backgroundColor = Color.parseColor("#1E88E5");
-	ButtonFloatSmall buttonSelectColor;
     public  static Context context;
 
     @SuppressLint("NewApi")

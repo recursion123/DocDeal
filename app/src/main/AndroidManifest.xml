@@ -59,6 +59,10 @@
             android:name="com.gtrj.docdeal.ui.ContactsDetail"
             android:label="详细资料"
             android:screenOrientation="portrait"></activity>
+        <activity
+            android:name="com.gtrj.docdeal.ui.SearchActivity"
+            android:label="公文搜索"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

@@ -194,7 +194,7 @@ public class DocMainList extends Activity implements
         switch (item.getItemId()) {
             // Respond to the action bar's Up/Home button
             case R.id.search_btn:
-                Toast.makeText(this, "查询", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(context,SearchActivity.class));
                 break;
             case android.R.id.home:
                 NavUtils.navigateUpFromSameTask(this);

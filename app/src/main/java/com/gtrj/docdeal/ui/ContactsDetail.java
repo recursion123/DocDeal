@@ -2,7 +2,8 @@ package com.gtrj.docdeal.ui;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -69,6 +70,29 @@ public class ContactsDetail extends Activity {
         list = new ArrayList<>();
         simpleAdapter = new SimpleAdapter(this, list, R.layout.contacts_detail_info, strs, ids);
         contactsDetailInfo.setAdapter(simpleAdapter);
+
+        call.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                String phone_number = getIntent().getExtras().getString("phone");
+                phone_number = phone_number.trim();
+                if (phone_number != null && !phone_number.equals("")) {
+                    Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"
+                            + phone_number));
+                    ContactsDetail.this.startActivity(intent);
+                }
+            }
+        });
+
+        sendMessage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String phone_number = getIntent().getExtras().getString("phone");
+                Uri smsToUri = Uri.parse("smsto:" + phone_number);
+                Intent intent = new Intent(Intent.ACTION_SENDTO, smsToUri);
+                startActivity(intent);
+            }
+        });
 
         hide();
 
