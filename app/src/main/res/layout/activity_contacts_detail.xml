@@ -1,19 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:bootstrapthumbnail="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <android.support.v7.widget.CardView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        card_view:cardCornerRadius="5dp"
-        android:layout_gravity="center"
-        android:layout_margin="5dp">
 
-        <TextView
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <com.beardedhen.androidbootstrap.BootstrapThumbnail
+            android:id="@+id/thumbnail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/text"
-            android:text="联系人"></TextView>
-    </android.support.v7.widget.CardView>
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="20dp"
+            bootstrapthumbnail:bt_width="45dp"
+            bootstrapthumbnail:bt_height="45dp"
+            bootstrapthumbnail:bct_size="small"
+            bootstrapthumbnail:bt_image="@drawable/default_photo" />
+
+        <TextView
+            android:id="@+id/user_name"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="20dp"
+            android:textSize="22sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="联系人姓名" />
+    </LinearLayout>
+
+    <ListView
+        android:layout_marginTop="22dp"
+        android:id="@+id/contacts_detail_info"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"></ListView>
+
+    <Button
+        android:layout_marginTop="22dp"
+        android:id="@+id/send_message"
+        android:layout_width="280dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_blue"
+        android:layout_gravity="center"
+        android:text="发送短信"
+        android:textColor="@color/white" />
+
+    <Button
+        android:id="@+id/call"
+        android:layout_width="280dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_white"
+        android:layout_gravity="center"
+        android:text="拨打电话"
+        android:layout_marginTop="20dp"
+        android:textColor="@color/number" />
+    <com.gc.materialdesign.views.ProgressBarCircularIndeterminate
+        android:id="@+id/loading"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_gravity="center"
+        android:layout_centerInParent="true"
+        android:background="#1E88E5" />
 </LinearLayout>

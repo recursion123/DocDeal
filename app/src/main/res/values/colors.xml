@@ -8,4 +8,5 @@
     <color name="gradient_light_start">#30000000</color>
     <color name="gray">#ADADAD</color>
     <color name="number">#8B8B83</color>
+    <color name="deep_blue">#27408B</color>
 </resources>

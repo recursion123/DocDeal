@@ -57,7 +57,7 @@
             android:screenOrientation="portrait"></activity>
         <activity
             android:name="com.gtrj.docdeal.ui.ContactsDetail"
-            android:label="@string/menu3"
+            android:label="详细资料"
             android:screenOrientation="portrait"></activity>
     </application>
 
