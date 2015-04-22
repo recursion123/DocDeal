@@ -23,6 +23,7 @@ import com.gtrj.docdeal.adapter.DocMainListAdapter;
 import com.gtrj.docdeal.bean.DocInfo;
 import com.gtrj.docdeal.net.WebService;
 import com.gtrj.docdeal.util.ContextString;
+import com.gtrj.docdeal.util.DocApplication;
 import com.gtrj.docdeal.util.RecyclerItemClickListener;
 
 import org.dom4j.Document;
@@ -40,21 +41,23 @@ import java.util.Map;
  * Created by zhang77555 on 2014/12/24.
  */
 public class DocMainList extends Activity implements
-        SwipeRefreshLayout.OnRefreshListener{
+        SwipeRefreshLayout.OnRefreshListener {
     private RecyclerView recList;
     private SoapObject obj;
     private DocMainListAdapter cAdapter;
     private SwipeRefreshLayout swipeLayout;
     private boolean isRefresh = false;
-    private int page=1;
+    private int page = 1;
     private Context context;
     private ProgressBarCircularIndeterminate loading;
+
+    private Boolean isPullDown=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_doc_main_list);
-        context=this;
+        context = this;
 
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -76,11 +79,12 @@ public class DocMainList extends Activity implements
         recList.setAdapter(cAdapter);
         recList.addOnItemTouchListener(
                 new RecyclerItemClickListener(context, new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override public void onItemClick(View view, int position) {
-                        Intent intent=new Intent();
-                        intent.setClass(context,DocMainDetail.class);
-                        Bundle bundle=new Bundle();
-                        bundle.putString("DocId",list.get(list.size()-1-position).getId());
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        Intent intent = new Intent();
+                        intent.setClass(context, DocMainDetail.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putString("DocId", cAdapter.contactList.get(cAdapter.contactList.size() - 1 - position).getId());
                         intent.putExtras(bundle);
                         startActivity(intent);
                     }
@@ -98,7 +102,13 @@ public class DocMainList extends Activity implements
                     Thread t = new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            cAdapter.contactList.addAll(cAdapter.contactList.size(),parserXml(getListData(page)));
+                            if (!isPullDown&&DocApplication.lruCache.get("DocList") != null) {
+                                cAdapter.contactList = (List<DocInfo>) DocApplication.lruCache.get("DocList");
+                            } else {
+                                cAdapter.contactList.addAll(cAdapter.contactList.size(), parserXml(getListData(page)));
+                                DocApplication.lruCache.put("DocList",cAdapter.contactList);
+                                isPullDown=false;
+                            }
                             Message msg = msgHandler.obtainMessage();
                             msg.arg1 = 2;
                             msgHandler.sendMessage(msg);
@@ -138,17 +148,20 @@ public class DocMainList extends Activity implements
 
     @Override
     public void onRefresh() {
-        if(!isRefresh){ isRefresh = true;
+        if (!isRefresh) {
+            isRefresh = true;
             new Handler().postDelayed(new Runnable() {
                 public void run() {
                     swipeLayout.setRefreshing(false);
                     page++;
+                    isPullDown=true;
                     Message msg = msgHandler.obtainMessage();
                     msg.arg1 = 1;
                     msgHandler.sendMessage(msg);
-                    isRefresh= false;
+                    isRefresh = false;
                 }
-            }, 2000); }
+            }, 2000);
+        }
     }
 
     private List<DocInfo> parserXml(String xml) {
@@ -181,7 +194,7 @@ public class DocMainList extends Activity implements
         switch (item.getItemId()) {
             // Respond to the action bar's Up/Home button
             case R.id.search_btn:
-                Toast.makeText(this,  "查询", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "查询", Toast.LENGTH_SHORT).show();
                 break;
             case android.R.id.home:
                 NavUtils.navigateUpFromSameTask(this);
@@ -189,6 +202,7 @@ public class DocMainList extends Activity implements
         }
         return super.onOptionsItemSelected(item);
     }
+
     //生成对应的菜单,并添加到Menu中
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

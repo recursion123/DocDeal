@@ -14,7 +14,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -150,6 +149,7 @@ public class Contacts extends FragmentActivity implements ActionBar.TabListener 
         private OverlayThread overlayThread;
         private Context context;
         private View rootView;
+        private Boolean lock;
 
         public DummySectionFragment(String type) {
             this.type = type;
@@ -162,11 +162,14 @@ public class Contacts extends FragmentActivity implements ActionBar.TabListener 
             context = rootView.getContext();
             loading = (ProgressBarCircularIndeterminate) rootView.findViewById(R.id.loading);
             loading.setVisibility(View.VISIBLE);
-
+            lock = false;
             list = new ArrayList<>();
             alphaIndexer = new HashMap<>();
             overlayThread = new OverlayThread();
             adapter = new ListAdapter(context, list);
+            Message msg = msgHandler.obtainMessage();
+            msg.arg1 = 1;
+            msgHandler.sendMessage(msg);
             return rootView;
         }
 
@@ -216,7 +219,6 @@ public class Contacts extends FragmentActivity implements ActionBar.TabListener 
                     ContextString.NameSpace,
                     ContextString.DocContacts,
                     requestDatas);
-            Log.e("tag", "getdata");
             String result = obj.getProperty(ContextString.DocContacts + "Return").toString();
             if (obj != null && obj.getPropertyCount() > 0) {
                 if ("0".equals(this.type)) {
@@ -276,6 +278,9 @@ public class Contacts extends FragmentActivity implements ActionBar.TabListener 
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     Bundle bundle = new Bundle();
                     bundle.putString("id", list.get(position).getId());
+                    bundle.putString("name", list.get(position).getName());
+                    bundle.putString("phone", list.get(position).getNumber());
+                    bundle.putString("type", type);
                     startActivity(new Intent(context, ContactsDetail.class).putExtras(bundle));
                 }
             });
@@ -318,7 +323,8 @@ public class Contacts extends FragmentActivity implements ActionBar.TabListener 
         public void onPause() {
             try {
                 windowManager.removeView(overlay);
-                windowManager=null;
+                windowManager = null;
+                lock=true;
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -328,9 +334,9 @@ public class Contacts extends FragmentActivity implements ActionBar.TabListener 
         @Override
         public void onResume() {
             super.onResume();
-            Message msg = msgHandler.obtainMessage();
-            msg.arg1 = 1;
-            msgHandler.sendMessage(msg);
+            if (lock) {
+                initOverlay();
+            }
         }
 
         private class ListAdapter extends BaseAdapter {

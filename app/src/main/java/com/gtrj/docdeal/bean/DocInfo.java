@@ -1,9 +1,11 @@
 package com.gtrj.docdeal.bean;
 
+import java.io.Serializable;
+
 /**
  * Created by zhang77555 on 2014/12/25.
  */
-public class DocInfo {
+public class DocInfo implements Serializable{
     private String id;
     private String title;
     private String sender;

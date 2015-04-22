@@ -11,4 +11,5 @@ public class ContextString {
     public static final String DocMainDetail = "getMobileGWInfo";
     public static final String DocMainDetailAccessory = "getFJFileBase64Content";
     public static final String DocContacts = "getUserByOrgidAndBooktype";
+    public static final String DocContactsDetail = "getInfoByUserId";
 }
