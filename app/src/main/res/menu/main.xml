@@ -6,9 +6,4 @@
         android:icon="@drawable/abc_ic_search_api_mtrl_alpha"
         android:orderInCategory="100"
         android:showAsAction="always" />
-    <item android:id="@+id/action_settings"
-        android:title=""
-        android:icon="@drawable/ic_ab_overflow_compat"
-        android:orderInCategory="100"
-        android:showAsAction="always" />
 </menu>
