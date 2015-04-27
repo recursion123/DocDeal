@@ -65,7 +65,8 @@ public class MainActivity extends Activity{
 
         	@Override
         	public void onClick(View arg0) {
-
+                Intent intent = new Intent(MainActivity.this,CalendarActivity.class);
+                startActivity(intent);
         	}
         });
         layoutRipple = (LayoutRipple) findViewById(R.id.systemSetting);

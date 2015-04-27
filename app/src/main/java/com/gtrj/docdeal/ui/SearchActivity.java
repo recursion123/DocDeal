@@ -131,7 +131,7 @@ public class SearchActivity extends Activity {
         pop.show();
         ListView selectListView = new ListView(this);
         selectListView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, map[1].keySet().size() * 150 > 600 ? 600 : map[1].keySet().size() * 150));
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.dept_select_list_item, map[1].keySet().toArray(new String[map[1].keySet().size()]));
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.dept_select_list_item, map[1].keySet().toArray(new String[map[1].keySet().size()]));
         selectListView.setAdapter(adapter);
         selectListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
