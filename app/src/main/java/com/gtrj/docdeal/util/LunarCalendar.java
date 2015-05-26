@@ -120,7 +120,7 @@ public class LunarCalendar {
 	 * 
 	 * isday: 这个参数为false---日期为节假日时，阴历日期就返回节假日 ，true---不管日期是否为节假日依然返回这天对应的阴历日期
 	 * 
-	 * @param cal
+	 * @param day_log
 	 * @return
 	 */
 	public String getLunarDate(int year_log, int month_log, int day_log, boolean isday) {

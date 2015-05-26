@@ -80,7 +80,7 @@ public class DocMainDetail extends Activity {
         recList.setLayoutManager(llm);
         final Map[] detailData = new Map[2];
         accessorys = new ArrayList<>();
-        cAdapter = new DocDetailAdapter(detailData, accessorys);
+        cAdapter = new DocDetailAdapter(detailData, accessorys,docId);
         recList.setAdapter(cAdapter);
 
         Message msg = msgHandler.obtainMessage();
@@ -148,19 +148,6 @@ public class DocMainDetail extends Activity {
     }
 
     private Map[] parserXml(String xml) {
-
-        File file = new File(Environment.getExternalStorageState() + "/myDoc/");
-        if (!file.exists()) {
-            file.mkdirs();
-        }
-        String filePath = Environment.getExternalStorageState() + "/myDoc/text.txt";
-        try {
-            FileOutputStream out = new FileOutputStream(filePath);
-            out.write(xml.getBytes());
-            out.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         Map[] maps = new Map[2];
         maps[0] = new HashMap<String, String>();
         maps[1] = new HashMap<String, String[]>();

@@ -21,6 +21,7 @@ import com.gc.materialdesign.widgets.PopWindow;
 import com.gc.materialdesigndemo.R;
 import com.gtrj.docdeal.ui.DocMainDetail;
 import com.gtrj.docdeal.ui.DocMainDetailText;
+import com.gtrj.docdeal.ui.GalleryFileActivity;
 
 
 import org.textmining.text.extraction.WordExtractor;
@@ -38,10 +39,12 @@ public class DocDetailAdapter extends RecyclerView.Adapter<DocDetailAdapter.Deta
     public Map[] detailData;
     private int w_screen;
     public List<String> accessorys;
+    private String docId;
 
-    public DocDetailAdapter(Map[] detailData, List accessorys) {
+    public DocDetailAdapter(Map[] detailData, List accessorys, String docId) {
         this.detailData = detailData;
         this.accessorys = accessorys;
+        this.docId = docId;
     }
 
     @Override
@@ -181,7 +184,7 @@ public class DocDetailAdapter extends RecyclerView.Adapter<DocDetailAdapter.Deta
                 final PopWindow popWindow = new PopWindow(v.getContext(), "附件列表");
                 popWindow.show();
                 if (accessorys.size() == 0) {
-                    TextView textView=new TextView(v.getContext());
+                    TextView textView = new TextView(v.getContext());
                     textView.setTextSize(18);
                     textView.setText("没有可以查看的附件！");
                     popWindow.addNewView(textView);
@@ -192,6 +195,15 @@ public class DocDetailAdapter extends RecyclerView.Adapter<DocDetailAdapter.Deta
                         btn.setText(s);
                         btn.setTextColor(Color.parseColor("#1E88E5"));
                         btn.setBackground(v.getContext().getResources().getDrawable(R.drawable.item_select));
+                        btn.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent = new Intent(v.getContext(), GalleryFileActivity.class);
+                                intent.putExtra("docId",docId);
+                                intent.putExtra("accessoryName",((TextView)v).getText());
+                                v.getContext().startActivity(intent);
+                            }
+                        });
                         popWindow.addNewView(btn);
                     }
                 }

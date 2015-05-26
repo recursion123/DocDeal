@@ -1,6 +1,5 @@
 package com.gtrj.docdeal.ui;
 
-import com.gc.materialdesign.views.ButtonFloatSmall;
 import com.gc.materialdesign.views.LayoutRipple;
 import com.gc.materialdesigndemo.R;
 import com.nineoldandroids.view.ViewHelper;
@@ -11,7 +10,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.view.View;
 import android.view.Window;
 import android.view.View.OnClickListener;
@@ -78,7 +76,8 @@ public class MainActivity extends Activity{
 
         	@Override
         	public void onClick(View arg0) {
-
+                Intent intent = new Intent(MainActivity.this,SystemSetting.class);
+                startActivity(intent);
         	}
         });
     }
@@ -95,7 +94,7 @@ public class MainActivity extends Activity{
 
 		    	layoutRipple.setRippleColor(Color.parseColor("#1E88E5"));
 
-		    	layoutRipple.setRippleSpeed(30);
+		    	layoutRipple.setRippleSpeed(40);
 			}
 		});
 

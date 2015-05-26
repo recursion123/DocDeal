@@ -48,6 +48,10 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait"></activity>
         <activity
+            android:name="com.gtrj.docdeal.ui.GalleryFileActivity"
+            android:label="附件"
+            android:screenOrientation="portrait"></activity>
+        <activity
             android:name="com.gtrj.docdeal.ui.DocSubmit"
             android:label="@string/app_name"
             android:screenOrientation="portrait"></activity>
@@ -67,6 +71,10 @@
         <activity
             android:name="com.gtrj.docdeal.ui.CalendarActivity"
             android:label="@string/menu4"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name="com.gtrj.docdeal.ui.SystemSetting"
+            android:label="@string/menu5"
             android:screenOrientation="portrait"></activity>
     </application>
 
